@@ -16,13 +16,17 @@ extension CLLocationCoordinate2D{
 struct ContentView: View {
     
     @State private var LocationManager = CLLocationManager()
+    
+    @State private var odabrano: String?
+    
     var body: some View {
-        Map() {
+        Map(selection: $odabrano) {
             
             UserAnnotation()
             
             Marker ("FOI",systemImage: "graduationcap.fill" ,coordinate: .foi)
                 .tint(.blue)
+                .tag("FOI")
             
             Annotation("Stari grad", coordinate: .stariGrad) {
                 ZStack {
@@ -35,6 +39,7 @@ struct ContentView: View {
                 }
             }
             .annotationTitles(.hidden)
+            .tag("Stari grad")
             
         }
         //Kontrola mape
@@ -45,6 +50,34 @@ struct ContentView: View {
         }
         .onAppear {
             LocationManager.requestWhenInUseAuthorization()
+        }
+        .safeAreaInset(edge: .bottom) {
+            if let odabrano {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(odabrano)
+                        .font(.headline)
+                    Text(opis(naziv: odabrano))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
+                .background(.thinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .padding()
+            }
+        }
+    }
+        func opis(naziv: String) -> String {
+            switch naziv {
+            case "FOI":
+                return "Fakultet organizacije i informatike, Pavlinska 2, varaždin"
+            case "Stari grad":
+                return "Srednjovjekovna utvrda, dio Gradskog muzeja Varaždin"
+            default:
+                return ""
+            
         }
     }
 }
