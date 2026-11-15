@@ -14,10 +14,16 @@ extension CLLocationCoordinate2D{
 }
 
 struct ContentView: View {
+    
+    @State private var LocationManager = CLLocationManager()
     var body: some View {
         Map() {
+            
+            UserAnnotation()
+            
             Marker ("FOI",systemImage: "graduationcap.fill" ,coordinate: .foi)
                 .tint(.blue)
+            
             Annotation("Stari grad", coordinate: .stariGrad) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 5)
@@ -29,6 +35,16 @@ struct ContentView: View {
                 }
             }
             .annotationTitles(.hidden)
+            
+        }
+        //Kontrola mape
+        .mapControls {
+            MapUserLocationButton() // gumb za prikaz naše lokacije
+            MapCompass() // kompas kad se rotira po karti
+            MapScaleView() // mjerilo kad se zumira ili odzumira
+        }
+        .onAppear {
+            LocationManager.requestWhenInUseAuthorization()
         }
     }
 }
