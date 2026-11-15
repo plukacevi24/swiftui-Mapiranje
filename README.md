@@ -16,7 +16,7 @@ Kod većinski prati službene Appleove materijale navedene u odjeljku [Literatur
 
 | Korak | Sadržaj | Status |
 |---|---|---|
-| 1 | Prazan SwiftUI projekt i prikaz mape | u tijeku |
+| 1 | Prazan SwiftUI projekt i prikaz mape | gotovo |
 | 2 | Markeri i anotacije (POI) | ne dovršeno |
 | 3 | Dozvola za lokaciju i prikaz korisnikove lokacije | ne dovršeno |
 | 4 | Odabir (klik) na markere i prikaz detalja | ne dovršeno |
@@ -42,6 +42,7 @@ struct ContentView: View {
 Import MapKit- služi da možemo koristiti mape i sve povezano s njima (Map, Marker, Annotation)
 Map()- otvara interaktivnu mapu na kojoj korisnik može zumirat, kretat se i ostalo
 
+![Kôd u Xcodeu](docs/images/korak1-kodikanvas1.png)
 
 
 
