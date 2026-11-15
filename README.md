@@ -18,10 +18,11 @@ Kod većinski prati službene Appleove materijale navedene u odjeljku [Literatur
 |---|---|---|
 | 1 | Prazan SwiftUI projekt i prikaz mape | dovršeno |
 | 2 | Markeri i anotacije (POI) | dovršeno |
-| 3 | Dozvola za lokaciju i prikaz korisnikove lokacije | ne dovršeno |
+| 3 | Dozvola za lokaciju i prikaz korisnikove lokacije | dovršeno |
 | 4 | Odabir (klik) na markere i prikaz detalja | ne dovršeno |
 | 5 | Klik na proizvoljno mjesto na mapi (dodavanje vlastitog POI-ja) | ne dovršeno |
 
+<br>
 
 ## Korak 1- Prazan SwiftUI projekt i prikaz mape
 
@@ -43,6 +44,8 @@ Import MapKit- služi da možemo koristiti mape i sve povezano s njima (Map, Mar
 Map()- otvara interaktivnu mapu na kojoj korisnik može zumirat, kretat se i ostalo
 
 ![Kôd u Xcodeu](docs/images/korak1-kodikanvas1.png)
+
+<br>
 
 ## Korak 2- Markeri i anotacije (POI)
 
@@ -89,6 +92,73 @@ Annotation("Stari grad", coordinate: .stariGrad) {
 - .annotationTitles(.hidden) – skriva natpis ispod anotacije
   
 ![Marker i anotacija na mapi](docs/images/anotacija.png)
+
+<br>
+
+## Korak 3- Dozvola za lokaciju i prikaz korisnikove lokacije
+
+Pošto je lokacija osjetljiv podatak te ne želimo da svatko ima pristup njoj, Apple uvijek mora napraviti upit smije li joj pristupiti. Da bi to mogao napraviti potreban mu je framework Core Location.
+
+Također je potrebno znati zbog čega aplikacija treba pristup našoj lokaciji. Da bi to mogli prikazati trebamo:
+U Xcodeu: Targets → MapeDemo → Info → Custom iOS Target Properties → +
+
+- ključ: Privacy - Location When In Use Usage Description (NSLocationWhenInUseUsageDescription)
+- vrijednost: Lokacija se koristi za prikaz vašeg položaja na mapi.
+
+![Ključ u kartici Info](docs/images/pravljenjeupita.png)
+
+<br>
+
+### Upit
+
+Kada se otvori upit imaju 3 opcije: Allow once, Allow while Using App, Dont allow. 
+
+![Ključ u kartici Info](docs/images/upitzalokaciju.png)
+
+####  Traženje dozvole u kodu
+
+```swift
+struct ContentView: View {
+    @State private var locationManager = CLLocationManager()
+
+    var body: some View {
+        Map {
+            UserAnnotation()
+            // ... Izostavljeni marker i anotacija iz koraka 2 radi lakše preglednosti
+        }
+        .mapControls {
+            MapUserLocationButton()
+            MapCompass()
+            MapScaleView()
+        }
+        .onAppear {
+            locationManager.requestWhenInUseAuthorization()
+        }
+    }
+}
+```
+
+- CLLocationManager – Appleov objekt za upravljanje lokacijskim uslugama
+- @State – čuva isti manager dok je ekran prikazan
+- requestWhenInUseAuthorization() – prikazuje upit, ali ako je korisnik već odgovorio, ne prikazuje ništa
+- UserAnnotation() – korisnikova lokacija kao plava točka
+- .mapControls – kontrole: gumb za lokaciju, kompas i mjerilo
+
+### Prikaz gumba za lokaciju, kompasa i mjerila:
+
+![Ključ u kartici Info](docs/images/mjeriloikompas.png)
+
+<br>
+
+### Zadavanje kordinata gdje se nalazimo preko simulatora
+
+Pošto radimo na simulatora trebalo bi mu zadati neke kordinate gjde se "kao" nalazimo. To se radi tako da kad ste na simlatoru kliknete Features → Location → Custom Location… i upišete željene kordinate
+
+
+
+
+
+
 
 ## Literatura
 
