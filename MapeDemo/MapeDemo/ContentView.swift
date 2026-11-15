@@ -19,9 +19,27 @@ struct ContentView: View {
     
     @State private var odabrano: String?
     
+    let podrucjeStarogGrada = [
+        CLLocationCoordinate2D(latitude: 46.3111, longitude: 16.3339),
+        CLLocationCoordinate2D(latitude: 46.3111, longitude: 16.3357),
+        CLLocationCoordinate2D(latitude: 46.3099, longitude: 16.3357),
+        CLLocationCoordinate2D(latitude: 46.3099, longitude: 16.3339)
+    ]
+    
     var body: some View {
         Map(selection: $odabrano) {
             
+            MapCircle(center: .foi, radius: 150)
+                .foregroundStyle(.blue.opacity(0.2))
+                .stroke(.blue, lineWidth: 2)
+            
+            MapPolygon(coordinates: podrucjeStarogGrada)
+                .foregroundStyle(.green.opacity(0.3))
+                .stroke(.green, lineWidth: 2)
+            
+            MapPolyline(coordinates: [.foi, .stariGrad])
+                .stroke(.red, lineWidth: 4)
+
             UserAnnotation()
             
             Marker ("FOI",systemImage: "graduationcap.fill" ,coordinate: .foi)
