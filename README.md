@@ -234,7 +234,7 @@ func opis(naziv: String) -> String {
     case "Stari grad":
         return "Srednjovjekovna utvrda, dio Gradskog muzeja Varaždin"
     default:
-        return ""
+        return "Mjesto koje je korisnik dodao klikom na mapu"
     }
 }
 ```
