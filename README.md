@@ -234,6 +234,123 @@ func opis(naziv: String) -> String {
 
 ![Ključ u kartici Info](docs/images/infobox.png)
 
+## Korak 5- Klik na proizvoljno mjesto na mapi (dodavanje vlastitog POI-ja) i Grafički elementi
+
+### Grafički elementi
+
+Osim točaka (POI), na mapu možemo crtati i **područja i putanje**. MapKit nudi tri vrste overlaya:
+
+MapCircle- pravi kružnicu oko odabrane točke
+MapPolygon- zatvoreni geometrijski lik napravljen spajanjem točaka
+MapPolyline- linija koja spaja dvije točke
+
+```swift
+let podrucjeStarogGrada = [
+    CLLocationCoordinate2D(latitude: 46.3111, longitude: 16.3339),
+    CLLocationCoordinate2D(latitude: 46.3111, longitude: 16.3357),
+    CLLocationCoordinate2D(latitude: 46.3099, longitude: 16.3357),
+    CLLocationCoordinate2D(latitude: 46.3099, longitude: 16.3339)
+]
+```
+
+```swift
+Map(selection: $odabrano) {
+    MapCircle(center: .foi, radius: 150)
+        .foregroundStyle(.blue.opacity(0.2))
+        .stroke(.blue, lineWidth: 2)
+
+    MapPolygon(coordinates: podrucjeStarogGrada)
+        .foregroundStyle(.green.opacity(0.3))
+        .stroke(.green, lineWidth: 2)
+
+    MapPolyline(coordinates: [.foi, .stariGrad])
+        .stroke(.red, lineWidth: 4)
+}
+```
+
+- .foregroundStyle(...) – boja ispune, opacity(0.2) omogućuje da se mapa vidi kroz nju
+- .stroke(...) – boja i debljina ruba / linije
+- točke poligona spajaju se redom kojim su navedene, te se zadnja točka spaja s prvom točkom
+- overlayje treba prije navesti kako bi se markeri napravili na njima
+
+![Overlayi na mapi](docs/images/overlay.png)
+
+### Dodavanje POI-ja klikom na kartu
+
+Uz pomoć MapReader možemo klikom na kartu, dobiti kordinate gdje smo kliknuli tako da dobijemo proxy metodom convert(_:from:).
+
+Model dodanog mjesta:
+
+```swift
+struct DodanoMjesto: Identifiable {
+    let id = UUID()
+    let naziv: String
+    let koordinata: CLLocationCoordinate2D
+}
+```
+
+Stanje:
+
+```swift
+@State private var dodanaMjesta: [DodanoMjesto] = []
+@State private var novaKoordinata: CLLocationCoordinate2D?
+@State private var prikaziUnos = false
+@State private var unesenoIme = ""
+```
+
+Prepoznavanje klika i pretvorba u koordinate:
+
+```swift
+MapReader { proxy in
+    Map(selection: $odabrano) {
+        // ...
+        ForEach(dodanaMjesta) { mjesto in
+            Marker(mjesto.naziv, systemImage: "mappin", coordinate: mjesto.koordinata)
+                .tint(.orange)
+                .tag(mjesto.naziv)
+        }
+    }
+    .simultaneousGesture(
+        DragGesture(minimumDistance: 0)
+            .onEnded { vrijednost in
+                let pomak = abs(vrijednost.translation.width) + abs(vrijednost.translation.height)
+
+                if pomak < 5, let koordinata = proxy.convert(vrijednost.location, from: .local) {
+                    novaKoordinata = koordinata
+                    unesenoIme = ""
+                    prikaziUnos = true
+                }
+            }
+    )
+}
+```
+
+Standardni pristup je .onTapGesture na mapi, no na iOS-u 26 se on na Map pogledu ne okida (problem prijavljen na Apple Developer Forumu). Zato se koristi DragGesture(minimumDistance: 0) kao drugo rješenje problema: ako se prst gotovo nije pomaknuo (pomak < 5), radi se o kliku, a ne o povlačenju mape. .simultaneousGesture omogućuje da pomicanje i zumiranje mape i dalje rade.
+
+Unos naziva novog mjesta:
+
+```swift
+.alert("Novo mjesto", isPresented: $prikaziUnos) {
+    TextField("Naziv mjesta", text: $unesenoIme)
+    Button("Spremi") {
+        if let novaKoordinata {
+            let ime = unesenoIme.isEmpty ? "Mjesto \(dodanaMjesta.count + 1)" : unesenoIme
+            dodanaMjesta.append(DodanoMjesto(naziv: ime, koordinata: novaKoordinata))
+        }
+    }
+    Button("Odustani", role: .cancel) { }
+} message: {
+    Text("Unesite naziv za označeno mjesto.")
+}
+```
+
+- klik na mapu zapamti koordinatu i otvori prozor za unos imena
+- Spremi dodaje narančasti marker s napisanim imenom 
+- Odustani zatvara prozor za dodavanje markera bez dodavanja
+ ![Overlayi na mapi](docs/images/postavljanjemarkera.png)
+ ![Overlayi na mapi](docs/images/dodanmarker.png)
+
+
 ## Literatura
 
 1. Apple Inc. (2023). *Meet MapKit for SwiftUI*. WWDC23, sesija 10043. https://developer.apple.com/videos/play/wwdc2023/10043/
