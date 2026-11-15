@@ -22,6 +22,29 @@ Kod većinski prati službene Appleove materijale navedene u odjeljku [Literatur
 | 4 | Odabir (klik) na markere i prikaz detalja | ne dovršeno |
 | 5 | Klik na proizvoljno mjesto na mapi (dodavanje vlastitog POI-ja) | ne dovršeno |
 
+
+## Korak 1- Prazan SwiftUI projekt i prikaz mape
+
+Da bi mogli prikazati mapu/kartu moramo koristiti Appleov framework MapKit, pošto smo stavili da je najmanja podrška iOS 17, MapKit ima potpuno podršku za SwiftUI pa je zbog toga dovoljno sam napisati jedan red koda: Map()
+
+U ContentView.swift dodamo import MapKit te umjesto predloška s Hello world dodamo Map()
+
+```swift
+import SwiftUI
+import MapKit
+
+struct ContentView: View {
+    var body: some View {
+        Map()
+    }
+}
+```
+Import MapKit- služi da možemo koristiti mape i sve povezano s njima (Map, Marker, Annotation)
+Map()- otvara interaktivnu mapu na kojoj korisnik može zumirat, kretat se i ostalo
+
+
+
+
 ## Literatura
 
 1. Apple Inc. (2023). *Meet MapKit for SwiftUI*. WWDC23, sesija 10043. https://developer.apple.com/videos/play/wwdc2023/10043/
