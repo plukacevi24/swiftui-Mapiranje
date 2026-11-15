@@ -19,7 +19,7 @@ Kod većinski prati službene Appleove materijale navedene u odjeljku [Literatur
 | 1 | Prazan SwiftUI projekt i prikaz mape | dovršeno |
 | 2 | Markeri i anotacije (POI) | dovršeno |
 | 3 | Dozvola za lokaciju i prikaz korisnikove lokacije | dovršeno |
-| 4 | Odabir (klik) na markere i prikaz detalja | ne dovršeno |
+| 4 | Odabir (klik) na markere i prikaz detalja | dovršeno |
 | 5 | Klik na proizvoljno mjesto na mapi (dodavanje vlastitog POI-ja) | ne dovršeno |
 
 <br>
@@ -155,10 +155,84 @@ struct ContentView: View {
 Pošto radimo na simulatora trebalo bi mu zadati neke kordinate gjde se "kao" nalazimo. To se radi tako da kad ste na simlatoru kliknete Features → Location → Custom Location… i upišete željene kordinate
 
 
+## Korak 4- Odabir (klik) na markere i prikaz detalja
 
+### Odabir
 
+MapKit koristi selection za sve elemente mape na koje korisnik može kliknuti. MapKit sam obilježava koji je element odabran.
 
+Postupak kako to napraviti:
 
+1. napravimo varijablu u koju se sprema odabrani element,
+2. povežemo je s mapom: Map(selection: $odabrano),
+3. svaki element koji želimo kliknuti treba imati .tag(...),
+4. na temelju vrijednosti varijable prikažemo detalje.
+
+```swift
+@State private var odabrano: String?
+
+var body: some View {
+    Map(selection: $odabrano) {
+        Marker("FOI", systemImage: "graduationcap.fill", coordinate: .foi)
+            .tint(.blue)
+            .tag("FOI")
+
+        Annotation("Stari grad", coordinate: .stariGrad) {
+            // ... izgled anotacije iz koraka 2
+        }
+        .annotationTitles(.hidden)
+        .tag("Stari grad")
+    }
+}
+```
+- String? – varijabla može biti prazna (nil) kad ništa nije odabrano
+- $odabrano – mapa smije mijenjati vrijednost varijable
+- .tag("FOI") – kad korisnik klikne element, u varijablu se upiše njegova oznaka, ako element nema .tag ne može se kliknuti
+- klik na prazni dio mape poništava vrijednost u odabrano (odabrano postaje nil)
+
+### Prikaz detalja
+
+Kada odaberemo marker ili anotaciju dolje će nam se pokazati prozorčić s informacijom o markeru ili anotaciji.
+
+```swift
+.safeAreaInset(edge: .bottom) {
+    if let odabrano {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(odabrano)
+                .font(.headline)
+            Text(opis(naziv: odabrano))
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+        .background(.background)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .shadow(radius: 5)
+        .padding()
+    }
+}
+```
+
+```swift
+func opis(naziv: String) -> String {
+    switch naziv {
+    case "FOI":
+        return "Fakultet organizacije i informatike, Pavlinska 2, Varaždin"
+    case "Stari grad":
+        return "Srednjovjekovna utvrda, dio Gradskog muzeja Varaždin"
+    default:
+        return ""
+    }
+}
+```
+
+- .safeAreaInset(edge: .bottom)– dodaje prozorčić na dno ekrana, mapa ostaje vidljiva u pozadini
+- if let odabrano – prozorčić će se prikazati samo ako je nesto kliknuto (ne prazna povrsina)
+- .background(.background) – boja pozadine ovisno o temi
+- opis(naziv:) – za naziv koji imamo vraća is switcha rezultat, tj. opis
+
+![Ključ u kartici Info](docs/images/infobox.png)
 
 ## Literatura
 
