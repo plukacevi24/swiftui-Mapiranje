@@ -2,25 +2,37 @@
 
 Seminarski rad iz kolegija RAMPU
 
+## Sadržaj
+ 
+- [Plan rada](#plan-rada)
+- [Koraci](#koraci)
+- [Korak 1- Prazan SwiftUI projekt i prikaz mape](#korak-1--prazan-swiftui-projekt-i-prikaz-mape)
+- [Korak 2- Markeri i anotacije (POI)](#korak-2--markeri-i-anotacije-poi)
+- [Korak 3- Dozvola za lokaciju i prikaz korisnikove lokacije](#korak-3--dozvola-za-lokaciju-i-prikaz-korisnikove-lokacije)
+- [Korak 4- Odabir (klik) na markere i prikaz detalja](#korak-4--odabir-klik-na-markere-i-prikaz-detalja)
+- [Korak 5- Klik na proizvoljno mjesto na mapi (dodavanje vlastitog POI-ja) i Grafički elementi](#korak-5--klik-na-proizvoljno-mjesto-na-mapi-dodavanje-vlastitog-poi-ja-i-grafički-elementi)
+- [Literatura](#literatura)
+
 ## Plan rada
 
 Bavimo se izradom jednostavne iOS aplikacije koja će imati mogućnosti:
 1. Prikaza mape/karte (MapKit for SwiftUI)
-2. Traženje dozvole korisnika za korištenje njegove lokacije
-3. Dodavanja POI-ja i drugih grafičkih elemenata na mapu/kartu (markeri, anotacije)
-4. reagiranja na korsnikov klik kad klikne na elemente
+2. Dodavanja POI-ja i drugih grafičkih elemenata na mapu/kartu (markeri, anotacije)
+3. Traženje dozvole korisnika za korištenje njegove lokacije
+4. Prikaz detalja markera pomoću klikanja na njega
+5. reagiranja na korsnikov klik kad klikne na elemente te dodava
 
 Kod većinski prati službene Appleove materijale navedene u odjeljku [Literatura](#literatura).
 
 ## Koraci
 
-| Korak | Sadržaj | Status |
-|---|---|---|
+| Korak | Sadržaj 
+|---|---|
 | 1 | Prazan SwiftUI projekt i prikaz mape | dovršeno |
 | 2 | Markeri i anotacije (POI) | dovršeno |
-| 3 | Dozvola za lokaciju i prikaz korisnikove lokacije | dovršeno |
-| 4 | Odabir (klik) na markere i prikaz detalja | dovršeno |
-| 5 | Klik na proizvoljno mjesto na mapi (dodavanje vlastitog POI-ja) | ne dovršeno |
+| 3 | Dozvola za lokaciju i prikaz korisnikove lokacije | 
+| 4 | Odabir (klik) na markere i prikaz detalja | 
+| 5 | Klik na proizvoljno mjesto na mapi (dodavanje vlastitog POI-ja) i Grafički elementi |
 
 <br>
 
