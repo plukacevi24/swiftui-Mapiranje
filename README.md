@@ -16,8 +16,8 @@ Kod većinski prati službene Appleove materijale navedene u odjeljku [Literatur
 
 | Korak | Sadržaj | Status |
 |---|---|---|
-| 1 | Prazan SwiftUI projekt i prikaz mape | gotovo |
-| 2 | Markeri i anotacije (POI) | ne dovršeno |
+| 1 | Prazan SwiftUI projekt i prikaz mape | dovršeno |
+| 2 | Markeri i anotacije (POI) | dovršeno |
 | 3 | Dozvola za lokaciju i prikaz korisnikove lokacije | ne dovršeno |
 | 4 | Odabir (klik) na markere i prikaz detalja | ne dovršeno |
 | 5 | Klik na proizvoljno mjesto na mapi (dodavanje vlastitog POI-ja) | ne dovršeno |
@@ -44,7 +44,51 @@ Map()- otvara interaktivnu mapu na kojoj korisnik može zumirat, kretat se i ost
 
 ![Kôd u Xcodeu](docs/images/korak1-kodikanvas1.png)
 
+## Korak 2- Markeri i anotacije (POI)
 
+MapKit nudi dvije opcije označavanja: marker kojemu dajemo ime kordinate i ikonu te anotaciju kojoj dodajemo isto to, ali joj radimo izgled proizvoljno. U primjeru s slika napravljen je plavi marker na FOI i anotacija u obliku kvadratića na Stari grad. Kako bi ih mogli postaviti na pišemu unutar vitičastih zagrada nakon Map().
+ 
+Lokacije smo napravili kao konstante u proširenju tipa CLLocationCoordinate2D te imamo .foi i .starigrad
+
+```swift
+extension CLLocationCoordinate2D {
+    static let foi = CLLocationCoordinate2D(latitude: 46.3077, longitude: 16.3381)
+    static let stariGrad = CLLocationCoordinate2D(latitude: 46.3105, longitude: 16.3348)
+}
+```
+
+### Marker
+
+```swift
+Marker("FOI", systemImage: "graduationcap.fill", coordinate: .foi)
+    .tint(.blue)
+```
+
+- "FOI" – natpis ispod markera
+- systemImage: – ikona iz Appleove biblioteke SF Symbols
+- .tint(.blue) – boja balona
+
+![Marker i anotacija na mapi](docs/images/marker.png)
+### Annotation
+
+```swift
+Annotation("Stari grad", coordinate: .stariGrad) {
+    ZStack {
+        RoundedRectangle(cornerRadius: 5)
+            .fill(.background)
+        RoundedRectangle(cornerRadius: 5)
+            .stroke(.secondary, lineWidth: 5)
+        Image(systemName: "building.columns")
+            .padding(5)
+    }
+}
+.annotationTitles(.hidden)
+```
+
+- unutar { } pišemo vlastiti SwiftUI pogled – ovdje ZStack slaže pozadinu, okvir i ikonu jedno preko drugog
+- .annotationTitles(.hidden) – skriva natpis ispod anotacije
+  
+![Marker i anotacija na mapi](docs/images/anotacija.png)
 
 ## Literatura
 
